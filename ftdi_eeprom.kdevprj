@@ -33,7 +33,7 @@ makefiles=Makefile.am,ftdi_eeprom/Makefile.am,ftdi_eeprom/docs/Makefile.am,ftdi_
 project_name=Ftdi_eeprom
 project_type=normal_c
 sub_dir=ftdi_eeprom/
-version=0.1
+version=0.2
 version_control=None
 workspace=1
 

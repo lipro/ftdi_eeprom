@@ -188,6 +188,8 @@ cleanup:
     if (_read > 0 || _erase > 0 || _flash > 0) {
         printf("FTDI close: %d\n", ftdi_usb_close(&ftdi));
     }
+
+    ftdi_deinit (&ftdi);
     
     cfg_free(cfg);
     
