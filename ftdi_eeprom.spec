@@ -25,13 +25,10 @@ make
 %install
 make DESTDIR=$RPM_BUILD_ROOT install
 
-mkdir -p $RPM_BUILD_ROOT/usr/share/doc/%{name}-%{version}
-cp ftdi_eeprom/example.conf $RPM_BUILD_ROOT/usr/share/doc/%{name}-%{version}
-
 %clean
 rm -fr $RPM_BUILD_ROOT
 
 %files
 %defattr(-,root,root)
+%doc src/example.conf COPYING
 %{prefix}/bin/ftdi_eeprom
-/usr/share/doc/%{name}-%{version}/*
