@@ -3,7 +3,7 @@
                            -------------------
     begin                : Mon Apr  7 12:05:22 CEST 2003
     copyright            : (C) 2003 by Intra2net AG
-    email                : thomas.jarosch@intra2net.com
+    email                : opensource@intra2net.com
  ***************************************************************************/
 
 /***************************************************************************
@@ -65,7 +65,7 @@ int main(int argc, char *argv[]) {
     struct ftdi_eeprom eeprom;
 
     printf("\nFTDI eeprom generator v%s\n", VERSION);
-    printf ("(c) Intra2net AG <thomas.jarosch@intra2net.com>\n");
+    printf ("(c) Intra2net AG <opensource@intra2net.com>\n");
     
     if (argc != 2 && argc != 3) {
 	printf("Syntax: %s [commands] config-file\n", argv[0]);
