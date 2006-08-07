@@ -134,7 +134,7 @@ int main(int argc, char *argv[]) {
 
     	    i = ftdi_usb_open(&ftdi, 0x0403, 0x6001);
 	    if (i != 0) {
-		printf("Sorry, unable to find FTDI USB chip\n");
+		printf("Error: %s\n", ftdi.error_str);
 		exit (-1);
 	    }
 	}
