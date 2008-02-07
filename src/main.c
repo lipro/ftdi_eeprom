@@ -101,6 +101,7 @@ int main(int argc, char *argv[]) {
     if (cfg_getbool(cfg, "self_powered") && cfg_getint(cfg, "max_power") > 0)
 	printf("Hint: Self powered devices should have a max_power setting of 0.\n");
 
+    ftdi_init(&ftdi);
     ftdi_eeprom_initdefaults (&eeprom);
 
     eeprom.vendor_id = cfg_getint(cfg, "vendor_id");
@@ -125,7 +126,6 @@ int main(int argc, char *argv[]) {
     eeprom.serial = cfg_getstr(cfg, "serial");
 
     if (_read > 0 || _erase > 0 || _flash > 0) {
-        printf("FTDI init: %d\n", ftdi_init(&ftdi));
 	i = ftdi_usb_open(&ftdi, eeprom.vendor_id, eeprom.product_id);
 	
 	if (i != 0) {
