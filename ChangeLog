@@ -1,0 +1,8 @@
+New in 0.3 - 2009-02-16
+-----------------------
+* Fix a crash using newer libftdi versions
+* Updated autoconf suite
+
+New in 0.2 - 2004-03-25
+-----------------------
+* First public release

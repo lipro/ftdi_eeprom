@@ -1,0 +1,20 @@
+-------------------------------------------------------------------
+ftdi_eeprom version 0.3
+-------------------------------------------------------------------
+
+ftdi_eeprom - A tool for creating, uploading, and erasing
+the configuration EEPROM for a FT232BM/FT245BM FTDI chip. 
+
+The EEPROM content is generated using a flexible configuration file.
+
+Changes
+-------
+* Fix a crash using newer libftdi versions (Intra2net)
+* Updated autoconf suite (Intra2net)
+
+You'll find the newest version of ftdi_eeprom at:
+http://www.intra2net.com/en/developer/libftdi
+
+-------------------------------------------------------------------
+www.intra2net.com                            2003-2009 Intra2net AG
+-------------------------------------------------------------------
