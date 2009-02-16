@@ -12,4 +12,4 @@ PKG_CHECK_MODULES(LIBFTDI, libftdi)
 AC_SUBST(LIBFTDI_CFLAGS)
 AC_SUBST(LIBFTDI_LIBS)
 
-AC_OUTPUT(Makefile src/Makefile)
+AC_OUTPUT(Makefile src/Makefile ftdi_eeprom.spec)

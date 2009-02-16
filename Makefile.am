@@ -4,4 +4,4 @@ AUTOMAKE_OPTIONS = foreign 1.4
 
 SUBDIRS = src
 
-EXTRA_DIST = README AUTHORS ChangeLog
+EXTRA_DIST = README AUTHORS ChangeLog ftdi_eeprom.spec ftdi_eeprom.spec.in
