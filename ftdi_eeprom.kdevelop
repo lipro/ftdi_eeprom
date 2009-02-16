@@ -1,9 +1,9 @@
 <?xml version = '1.0'?>
 <kdevelop>
   <general>
-    <author>Gerd v. Egidy</author>
+    <author>Intra2net AG</author>
     <email>opensource@intra2net.com</email>
-    <version>0.2</version>
+    <version>0.3</version>
     <projectmanagement>KDevAutoProject</projectmanagement>
     <primarylanguage>C++</primarylanguage>
     <keywords>

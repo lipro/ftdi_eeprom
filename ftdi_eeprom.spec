@@ -1,7 +1,7 @@
 Summary:   Tool for creating/reading/erasing/flashing FTDI USB chip eeproms
 Name:      ftdi_eeprom
-Version:   0.2
-Release:   5
+Version:   0.3
+Release:   1
 Copyright: GPL
 Group:     Development/Tools
 Vendor:    Intra2net AG
@@ -18,7 +18,6 @@ Tool for creating/reading/erasing/flashing FTDI USB chip eeproms
 %setup -q
 
 %build
-autoconf
 ./configure --prefix=%{prefix}
 make
 

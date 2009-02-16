@@ -2,7 +2,7 @@
                              main.c  -  description
                            -------------------
     begin                : Mon Apr  7 12:05:22 CEST 2003
-    copyright            : (C) 2003 by Intra2net AG
+    copyright            : (C) 2003,2008 by Intra2net AG
     email                : opensource@intra2net.com
  ***************************************************************************/
 
