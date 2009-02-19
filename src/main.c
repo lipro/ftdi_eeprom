@@ -46,6 +46,7 @@ int main(int argc, char *argv[]) {
 	CFG_STR("product", "USB Serial Converter", 0),
 	CFG_STR("serial", "08-15", 0),
 	CFG_STR("filename", "", 0),
+	CFG_BOOL("flash_raw", cfg_false, 0),
 	CFG_END()
     };
     cfg_t *cfg;
@@ -103,7 +104,6 @@ int main(int argc, char *argv[]) {
 
     ftdi_init(&ftdi);
     ftdi_eeprom_initdefaults (&eeprom);
-
     eeprom.vendor_id = cfg_getint(cfg, "vendor_id");
     eeprom.product_id = cfg_getint(cfg, "product_id");
     eeprom.BM_type_chip = cfg_getbool(cfg, "BM_type_chip");
@@ -125,11 +125,16 @@ int main(int argc, char *argv[]) {
     eeprom.product = cfg_getstr(cfg, "product");
     eeprom.serial = cfg_getstr(cfg, "serial");
 
+
     if (_read > 0 || _erase > 0 || _flash > 0) {
 	i = ftdi_usb_open(&ftdi, eeprom.vendor_id, eeprom.product_id);
 	
-	if (i != 0) {
+	if (i == 0) {
+          printf("EEPROM size: %d\n", ftdi.eeprom_size);
+        }
+	else {
 	    printf("Unable to find FTDI devices under given vendor/product id: 0x%X/0x%X\n", eeprom.vendor_id, eeprom.product_id);
+	    printf("Error code: %d (%s)\n", i, ftdi_get_error_string(&ftdi));
 	    printf("Retrying with default FTDI id.\n");
 
     	    i = ftdi_usb_open(&ftdi, 0x0403, 0x6001);
@@ -141,10 +146,28 @@ int main(int argc, char *argv[]) {
     }
 
     if (_read > 0) {
-        printf("FTDI read eeprom: %d\n", ftdi_read_eeprom(&ftdi, (char *)&eeprom_buf));
+      printf("FTDI read eeprom: %d\n", ftdi_read_eeprom(&ftdi, (char *)eeprom_buf));
+
+/*         ftdi_eeprom_decode(&eeprom, eeprom_buf); */
+/*         printf("vendor_id = \"%04x\"\n", eeprom.vendor_id); */
+/*         printf("product_id = \"%04x\"\n", eeprom.product_id); */
+/*         printf("BM_type_chip = \"%s\"\n", eeprom.BM_type_chip?"true":"false"); */
+/*         printf("self_powered = \"%s\"\n", eeprom.self_powered?"true":"false"); */
+/*         printf("remote_wakeup = \"%s\"\n", eeprom.remote_wakeup?"true":"false"); */
+/*         printf("max_power = \"%d\"\n", eeprom.max_power); */
+/*         printf("in_is_isochronous = \"%s\"\n", eeprom.in_is_isochronous?"true":"false"); */
+/*         printf("out_is_isochronous = \"%s\"\n", eeprom.out_is_isochronous?"true":"false"); */
+/*         printf("suspend_pull_downs = \"%s\"\n", eeprom.suspend_pull_downs?"true":"false"); */
+/*         printf("use_serial = \"%s\"\n", eeprom.use_serial?"true":"false"); */
+/*         printf("change_usb_version = \"%s\"\n", eeprom.change_usb_version?"true":"false"); */
+/*         printf("usb_version = \"%d\"\n", eeprom.usb_version); */
+/*         printf("manufacturer = \"%s\"\n", eeprom.manufacturer); */
+/*         printf("product = \"%s\"\n", eeprom.product); */
+/*         printf("serial = \"%s\"\n", eeprom.serial); */
+
 	if (filename != NULL && strlen(filename) > 0) {
 	    FILE *fp = fopen (filename, "wb");
-	    fwrite (&eeprom_buf, 1, 128, fp);
+	    fwrite (eeprom_buf, 1, 128, fp);
 	    fclose (fp);
 	} else {
 	    printf("Warning: Not writing eeprom, you must supply a valid filename\n");
@@ -167,7 +190,14 @@ int main(int argc, char *argv[]) {
     }
 
     if (_flash > 0) {
-	printf ("FTDI write eeprom: %d\n", ftdi_write_eeprom(&ftdi, (char *)&eeprom_buf));
+      if (cfg_getbool(cfg, "flash_raw")) {
+        if (filename != NULL && strlen(filename) > 0) {
+          FILE *fp = fopen(filename, "rb");
+          fread(eeprom_buf, 1, 128, fp);
+          fclose(fp);
+        }
+      }
+       printf ("FTDI write eeprom: %d\n", ftdi_write_eeprom(&ftdi, (char *)eeprom_buf));
     }
 
     // Write to file?
