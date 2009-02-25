@@ -148,22 +148,22 @@ int main(int argc, char *argv[]) {
     if (_read > 0) {
       printf("FTDI read eeprom: %d\n", ftdi_read_eeprom(&ftdi, (char *)eeprom_buf));
 
-/*         ftdi_eeprom_decode(&eeprom, eeprom_buf); */
-/*         printf("vendor_id = \"%04x\"\n", eeprom.vendor_id); */
-/*         printf("product_id = \"%04x\"\n", eeprom.product_id); */
-/*         printf("BM_type_chip = \"%s\"\n", eeprom.BM_type_chip?"true":"false"); */
-/*         printf("self_powered = \"%s\"\n", eeprom.self_powered?"true":"false"); */
-/*         printf("remote_wakeup = \"%s\"\n", eeprom.remote_wakeup?"true":"false"); */
-/*         printf("max_power = \"%d\"\n", eeprom.max_power); */
-/*         printf("in_is_isochronous = \"%s\"\n", eeprom.in_is_isochronous?"true":"false"); */
-/*         printf("out_is_isochronous = \"%s\"\n", eeprom.out_is_isochronous?"true":"false"); */
-/*         printf("suspend_pull_downs = \"%s\"\n", eeprom.suspend_pull_downs?"true":"false"); */
-/*         printf("use_serial = \"%s\"\n", eeprom.use_serial?"true":"false"); */
-/*         printf("change_usb_version = \"%s\"\n", eeprom.change_usb_version?"true":"false"); */
-/*         printf("usb_version = \"%d\"\n", eeprom.usb_version); */
-/*         printf("manufacturer = \"%s\"\n", eeprom.manufacturer); */
-/*         printf("product = \"%s\"\n", eeprom.product); */
-/*         printf("serial = \"%s\"\n", eeprom.serial); */
+        ftdi_eeprom_decode(&eeprom, eeprom_buf);
+        printf("vendor_id = \"%04x\"\n", eeprom.vendor_id);
+        printf("product_id = \"%04x\"\n", eeprom.product_id);
+        printf("BM_type_chip = \"%s\"\n", eeprom.BM_type_chip?"true":"false");
+        printf("self_powered = \"%s\"\n", eeprom.self_powered?"true":"false");
+        printf("remote_wakeup = \"%s\"\n", eeprom.remote_wakeup?"true":"false");
+        printf("max_power = \"%d\"\n", eeprom.max_power);
+        printf("in_is_isochronous = \"%s\"\n", eeprom.in_is_isochronous?"true":"false");
+        printf("out_is_isochronous = \"%s\"\n", eeprom.out_is_isochronous?"true":"false");
+        printf("suspend_pull_downs = \"%s\"\n", eeprom.suspend_pull_downs?"true":"false");
+        printf("use_serial = \"%s\"\n", eeprom.use_serial?"true":"false");
+        printf("change_usb_version = \"%s\"\n", eeprom.change_usb_version?"true":"false");
+        printf("usb_version = \"%d\"\n", eeprom.usb_version);
+        printf("manufacturer = \"%s\"\n", eeprom.manufacturer);
+        printf("product = \"%s\"\n", eeprom.product);
+        printf("serial = \"%s\"\n", eeprom.serial);
 
 	if (filename != NULL && strlen(filename) > 0) {
 	    FILE *fp = fopen (filename, "wb");
