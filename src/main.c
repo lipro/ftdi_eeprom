@@ -148,7 +148,9 @@ int main(int argc, char *argv[]) {
     if (_read > 0) {
       printf("FTDI read eeprom: %d\n", ftdi_read_eeprom(&ftdi, (char *)eeprom_buf));
 
-        ftdi_eeprom_decode(&eeprom, eeprom_buf);
+        ftdi_eeprom_decode(&eeprom, eeprom_buf, ftdi.eeprom_size);
+        /* Debug output */
+        /*
         printf("vendor_id = \"%04x\"\n", eeprom.vendor_id);
         printf("product_id = \"%04x\"\n", eeprom.product_id);
         printf("BM_type_chip = \"%s\"\n", eeprom.BM_type_chip?"true":"false");
@@ -164,6 +166,7 @@ int main(int argc, char *argv[]) {
         printf("manufacturer = \"%s\"\n", eeprom.manufacturer);
         printf("product = \"%s\"\n", eeprom.product);
         printf("serial = \"%s\"\n", eeprom.serial);
+        */
 
 	if (filename != NULL && strlen(filename) > 0) {
 	    FILE *fp = fopen (filename, "wb");
@@ -197,7 +200,7 @@ int main(int argc, char *argv[]) {
           fclose(fp);
         }
       }
-       printf ("FTDI write eeprom: %d\n", ftdi_write_eeprom(&ftdi, (char *)eeprom_buf));
+      printf ("FTDI write eeprom: %d\n", ftdi_write_eeprom(&ftdi, (char *)eeprom_buf));
     }
 
     // Write to file?
