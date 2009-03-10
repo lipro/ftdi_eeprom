@@ -33,4 +33,38 @@ configure_file(${PROJECT_SOURCE_DIR}/config.h.cmake ${PROJECT_BINARY_DIR}/config
 add_definitions(-DHAVE_CONFIG_H)
 INCLUDE_DIRECTORIES(${PROJECT_BINARY_DIR})
 
+# Package information
+set(CPACK_PACKAGE_VERSION              ${VERSION_STRING})
+set(CPACK_PACKAGE_CONTACT              "http://www.intra2net.com/en/developer/libftdi/mailinglist.php")
+set(CPACK_PACKAGE_DESCRIPTION          "ftdi eeprom tool.")
+set(CPACK_PACKAGE_DESCRIPTION_SUMMARY  ${CPACK_PACKAGE_DESCRIPTION}
+                                       )
+# Package settings
+if(${UNIX})
+  set(CPACK_GENERATOR                    "DEB;RPM")
+  set(CPACK_CMAKE_GENERATOR              "Unix Makefiles")
+  set(CPACK_PACKAGE_NAME                 ${PROJECT_NAME})
+  set(CPACK_PACKAGE_FILE_NAME            ${CPACK_PACKAGE_NAME}-${CPACK_PACKAGE_VERSION})
+endif(${UNIX})
+
+if(${WIN32})
+  set(CPACK_GENERATOR                    "NSIS")
+  set(CPACK_CMAKE_GENERATOR              "MinGW Makefiles")
+  set(CPACK_PACKAGE_NAME                 "${PROJECT_NAME}")
+  set(CPACK_PACKAGE_VENDOR               "")
+  set(CPACK_PACKAGE_INSTALL_DIRECTORY    "ftdi_eeprom")
+  set(CPACK_PACKAGE_FILE_NAME            "${PROJECT_NAME}-${VERSION_STRING}-win32")
+  set(CPACK_NSIS_DISPLAY_NAME            "ftdi_eeprom")
+  set(CPACK_NSIS_MODIFY_PATH             "ON")
+endif(${WIN32})
+
+set(CPACK_RESOURCE_FILE_LICENSE        ${CMAKE_SOURCE_DIR}/COPYING)
+
+# Subdirectories
+if(${UNIX})
+  set(CPACK_SET_DESTDIR "ON")
+endif(${UNIX})
+
 add_subdirectory(src)
+
+include(CPack)
