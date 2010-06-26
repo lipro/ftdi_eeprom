@@ -158,7 +158,7 @@ int main(int argc, char *argv[])
 
     if (_read > 0)
     {
-        printf("FTDI read eeprom: %d\n", ftdi_read_eeprom(&ftdi, (char *)eeprom_buf));
+        printf("FTDI read eeprom: %d\n", ftdi_read_eeprom(&ftdi, eeprom_buf));
 
         ftdi_eeprom_decode(&eeprom, eeprom_buf, ftdi.eeprom_size);
         /* Debug output */
@@ -222,7 +222,7 @@ int main(int argc, char *argv[])
                 fclose(fp);
             }
         }
-        printf ("FTDI write eeprom: %d\n", ftdi_write_eeprom(&ftdi, (char *)eeprom_buf));
+        printf ("FTDI write eeprom: %d\n", ftdi_write_eeprom(&ftdi, eeprom_buf));
     }
 
     // Write to file?
