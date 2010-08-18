@@ -25,6 +25,25 @@
 #include <confuse.h>
 #include <ftdi.h>
 
+int str_to_cbus(char *str, int max_allowed)
+{
+    #define MAX_OPTION 14
+    const char* options[MAX_OPTION] = {
+     "TXDEN", "PWREN", "RXLED", "TXLED", "TXRXLED", "SLEEP",
+     "CLK48", "CLK24", "CLK12", "CLK6",
+     "IO_MODE", "BITBANG_WR", "BITBANG_RD", "SPECIAL"};
+    int i;
+    max_allowed += 1;
+    if (max_allowed > MAX_OPTION) max_allowed = MAX_OPTION;
+    for (i=0; i<max_allowed; i++) {
+        if (!(strcmp(options[i], str))) {
+            return i;
+        }
+    }
+    printf("WARNING: Invalid cbus option '%s'\n", str);
+    return 0;
+}
+
 int main(int argc, char *argv[])
 {
     /*
@@ -36,7 +55,7 @@ int main(int argc, char *argv[])
         CFG_INT("product_id", 0, 0),
         CFG_BOOL("self_powered", cfg_true, 0),
         CFG_BOOL("remote_wakeup", cfg_true, 0),
-        CFG_BOOL("BM_type_chip", cfg_true, 0),
+        CFG_STR_LIST("chip_type", "{BM,R,other}", 0),
         CFG_BOOL("in_is_isochronous", cfg_false, 0),
         CFG_BOOL("out_is_isochronous", cfg_false, 0),
         CFG_BOOL("suspend_pull_downs", cfg_false, 0),
@@ -49,6 +68,20 @@ int main(int argc, char *argv[])
         CFG_STR("serial", "08-15", 0),
         CFG_STR("filename", "", 0),
         CFG_BOOL("flash_raw", cfg_false, 0),
+        CFG_BOOL("high_current", cfg_false, 0),
+        CFG_STR_LIST("cbus0", "{TXDEN,PWREN,RXLED,TXLED,TXRXLED,SLEEP,CLK48,CLK24,CLK12,CLK6,IO_MODE,BITBANG_WR,BITBANG_RD,SPECIAL}", 0),
+        CFG_STR_LIST("cbus1", "{TXDEN,PWREN,RXLED,TXLED,TXRXLED,SLEEP,CLK48,CLK24,CLK12,CLK6,IO_MODE,BITBANG_WR,BITBANG_RD,SPECIAL}", 0),
+        CFG_STR_LIST("cbus2", "{TXDEN,PWREN,RXLED,TXLED,TXRXLED,SLEEP,CLK48,CLK24,CLK12,CLK6,IO_MODE,BITBANG_WR,BITBANG_RD,SPECIAL}", 0),
+        CFG_STR_LIST("cbus3", "{TXDEN,PWREN,RXLED,TXLED,TXRXLED,SLEEP,CLK48,CLK24,CLK12,CLK6,IO_MODE,BITBANG_WR,BITBANG_RD,SPECIAL}", 0),
+        CFG_STR_LIST("cbus4", "{TXDEN,PWRON,RXLED,TXLED,TX_RX_LED,SLEEP,CLK48,CLK24,CLK12,CLK6}", 0),
+        CFG_BOOL("invert_txd", cfg_false, 0),
+        CFG_BOOL("invert_rxd", cfg_false, 0),
+        CFG_BOOL("invert_rts", cfg_false, 0),
+        CFG_BOOL("invert_cts", cfg_false, 0),
+        CFG_BOOL("invert_dtr", cfg_false, 0),
+        CFG_BOOL("invert_dsr", cfg_false, 0),
+        CFG_BOOL("invert_dcd", cfg_false, 0),
+        CFG_BOOL("invert_ri", cfg_false, 0),
         CFG_END()
     };
     cfg_t *cfg;
@@ -113,7 +146,14 @@ int main(int argc, char *argv[])
     ftdi_eeprom_initdefaults (&eeprom);
     eeprom.vendor_id = cfg_getint(cfg, "vendor_id");
     eeprom.product_id = cfg_getint(cfg, "product_id");
-    eeprom.BM_type_chip = cfg_getbool(cfg, "BM_type_chip");
+    char *type = cfg_getstr(cfg, "chip_type");
+    if (!strcmp(type, "BM")) {
+        eeprom.chip_type = TYPE_BM;
+    } else if (!strcmp(type, "R")) {
+        eeprom.chip_type = TYPE_R;
+    } else {
+        eeprom.chip_type = TYPE_AM;
+    }
 
     eeprom.self_powered = cfg_getbool(cfg, "self_powered");
     eeprom.remote_wakeup = cfg_getbool(cfg, "remote_wakeup");
@@ -131,7 +171,22 @@ int main(int argc, char *argv[])
     eeprom.manufacturer = cfg_getstr(cfg, "manufacturer");
     eeprom.product = cfg_getstr(cfg, "product");
     eeprom.serial = cfg_getstr(cfg, "serial");
-
+    eeprom.high_current = cfg_getbool(cfg, "high_current");
+    eeprom.cbus_function[0] = str_to_cbus(cfg_getstr(cfg, "cbus0"), 13);
+    eeprom.cbus_function[1] = str_to_cbus(cfg_getstr(cfg, "cbus1"), 13);
+    eeprom.cbus_function[2] = str_to_cbus(cfg_getstr(cfg, "cbus2"), 13);
+    eeprom.cbus_function[3] = str_to_cbus(cfg_getstr(cfg, "cbus3"), 13);
+    eeprom.cbus_function[4] = str_to_cbus(cfg_getstr(cfg, "cbus4"), 9);
+    int invert = 0;
+    if (cfg_getbool(cfg, "invert_rxd")) invert |= INVERT_RXD;
+    if (cfg_getbool(cfg, "invert_txd")) invert |= INVERT_TXD;
+    if (cfg_getbool(cfg, "invert_rts")) invert |= INVERT_RTS;
+    if (cfg_getbool(cfg, "invert_cts")) invert |= INVERT_CTS;
+    if (cfg_getbool(cfg, "invert_dtr")) invert |= INVERT_DTR;
+    if (cfg_getbool(cfg, "invert_dsr")) invert |= INVERT_DSR;
+    if (cfg_getbool(cfg, "invert_dcd")) invert |= INVERT_DCD;
+    if (cfg_getbool(cfg, "invert_ri")) invert |= INVERT_RI;
+    eeprom.invert = invert;
 
     if (_read > 0 || _erase > 0 || _flash > 0)
     {
@@ -163,9 +218,12 @@ int main(int argc, char *argv[])
         ftdi_eeprom_decode(&eeprom, eeprom_buf, ftdi.eeprom_size);
         /* Debug output */
         /*
+        const char* chip_types[] = {"other", "BM", "R"};
         printf("vendor_id = \"%04x\"\n", eeprom.vendor_id);
         printf("product_id = \"%04x\"\n", eeprom.product_id);
-        printf("BM_type_chip = \"%s\"\n", eeprom.BM_type_chip?"true":"false");
+        printf("chip_type = \"%s\"\n",
+          (eeprom.chip_type > 0x06) || (eeprom.chip_type & 0x01) ? "unknown":
+          chip_types[eeprom.chip_type>>1]);
         printf("self_powered = \"%s\"\n", eeprom.self_powered?"true":"false");
         printf("remote_wakeup = \"%s\"\n", eeprom.remote_wakeup?"true":"false");
         printf("max_power = \"%d\"\n", eeprom.max_power);
@@ -200,11 +258,14 @@ int main(int argc, char *argv[])
     }
 
     size_check = ftdi_eeprom_build(&eeprom, eeprom_buf);
+
     if (size_check == -1)
     {
         printf ("Sorry, the eeprom can only contain 128 bytes (100 bytes for your strings).\n");
         printf ("You need to short your string by: %d bytes\n", size_check);
         goto cleanup;
+    } else if (size_check < 0) {
+        printf ("ftdi_eeprom_build(): error: %d\n", size_check);
     }
     else
     {
