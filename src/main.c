@@ -205,8 +205,11 @@ int main(int argc, char *argv[])
             i = ftdi_usb_open(&ftdi, 0x0403, 0x6001);
             if (i != 0)
             {
-                printf("Error: %s\n", ftdi.error_str);
-                exit (-1);
+                i = ftdi_usb_open(&ftdi, 0x0403, 0x6010);
+                if (i != 0) {
+                    printf("Error: %s\n", ftdi.error_str);
+                    exit (-1);
+                }
             }
         }
     }
@@ -306,9 +309,8 @@ cleanup:
     if (_read > 0 || _erase > 0 || _flash > 0)
     {
         printf("FTDI close: %d\n", ftdi_usb_close(&ftdi));
+        ftdi_deinit (&ftdi);
     }
-
-    ftdi_deinit (&ftdi);
 
     cfg_free(cfg);
 
