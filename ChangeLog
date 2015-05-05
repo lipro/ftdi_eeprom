@@ -1,6 +1,7 @@
 New in 0.4 - 2015-XX-XX
 -----------------------
 * Ability to flash raw eeprom files (Marius Kintel)
+* Updated autoconf suite (Jim Paris)
 
 New in 0.3 - 2009-02-16
 -----------------------

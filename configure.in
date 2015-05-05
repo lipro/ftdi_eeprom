@@ -8,7 +8,7 @@ AC_PROG_CC
 
 AC_CHECK_LIB(confuse, cfg_getstr,,[AC_MSG_ERROR(can't find confuse library)])
 
-PKG_CHECK_MODULES(LIBFTDI, libftdi)
+PKG_CHECK_MODULES(LIBFTDI, libftdi >= 0.16)
 AC_SUBST(LIBFTDI_CFLAGS)
 AC_SUBST(LIBFTDI_LIBS)
 
